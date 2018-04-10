@@ -21,8 +21,9 @@ def function_approx(n_layers, func):
     pred_y = a.predict(pred_x) # predict network output given x_
     fig = plt.figure() 
     plt.plot(x_, func(x_), color = 'b') # plot original function
-    plt.plot(pred_x, pred_y, 'o', color = 'red') # plot network output
+    plt.plot(pred_x, pred_y, '--', color = 'red') # plot network output
     plt.show()
 
-function_approx(10, lambda x: (x)**3)
-function_approx(10, lambda x: 3+ 4*(x)**4)
+
+function_approx(100, lambda x: (x)**3 - 25*(x**2) - 300)
+# function_approx(1000, lambda x: (x)**3)
