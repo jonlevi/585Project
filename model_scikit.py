@@ -11,7 +11,7 @@ def function_approx(n_layers, func):
     y = np.reshape(y ,[n ,])
 
     clf = MLPRegressor(alpha=0.001, hidden_layer_sizes = (n_layers,), max_iter = 100000, 
-                     activation = 'logistic', verbose = 'True', learning_rate = 'adaptive')
+                     activation = 'logistic', verbose = 'False', learning_rate = 'adaptive')
     a = clf.fit(X, y)
 
 
@@ -26,4 +26,4 @@ def function_approx(n_layers, func):
 
 
 function_approx(100, lambda x: (x)**3 - 25*(x**2) - 300)
-# function_approx(1000, lambda x: (x)**3)
+function_approx(1000, lambda x: np.cos(x))

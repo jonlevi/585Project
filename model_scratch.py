@@ -1,6 +1,7 @@
 import random
 import numpy as np
 import matplotlib.pyplot as plt
+from cordic import cossin_cordic
 
 
 class Network:
@@ -35,7 +36,6 @@ N = Network(11, 2, .005, [np.cos, np.sin])
 stim = [random.uniform(-2*np.pi, 2*np.pi) for i in range(10000)]
 sorted_stim = sorted(stim)
 x = sorted_stim[::100]
-print(N.w)
 
 v1 = np.zeros((100, 100))
 v2 = np.zeros((100, 100))
@@ -50,18 +50,24 @@ for i, s in enumerate(stim):
 v1 = np.array(v1)
 v2 = np.array(v2)
 
-plt.subplot(121)
-plt.plot(x, np.cos(x), 'k')
-plt.plot(x, v1[10,:], '--', lw=0.75, label='1000th')
-plt.plot(x, v1[30,:], '--', lw=0.75, label='3000th')
-plt.plot(x, v1[50,:], '--', lw=0.75, label='5000th')
-plt.plot(x, v1[70,:], '--', lw=0.75, label='7000th')
+# plt.subplot(131)
+# plt.plot(x, np.cos(x), 'k')
+# plt.plot(x, v1[10,:], '--', lw=0.75, label='1000th')
+# plt.plot(x, v1[30,:], '--', lw=0.75, label='3000th')
+# plt.plot(x, v1[50,:], '--', lw=0.75, label='5000th')
+# plt.plot(x, v1[70,:], '--', lw=0.75, label='7000th')
 
-plt.subplot(122)
-plt.plot(x, np.sin(x), 'k')
-plt.plot(x, v2[10,:], '--', lw=0.75, label='1000th')
-plt.plot(x, v2[30,:], '--', lw=0.75, label='3000th')
-plt.plot(x, v2[50,:], '--', lw=0.75, label='5000th')
-plt.plot(x, v2[70,:], '--', lw=0.75, label='7000th')
+# plt.subplot(132)
+# plt.plot(x, np.sin(x), 'k')
+# plt.plot(x, v2[10,:], '--', lw=0.75, label='1000th')
+# plt.plot(x, v2[30,:], '--', lw=0.75, label='3000th')
+# plt.plot(x, v2[50,:], '--', lw=0.75, label='5000th')
+# plt.plot(x, v2[70,:], '--', lw=0.75, label='7000th')
+
+# plt.subplot(133)
+cord = np.array([cossin_cordic(a,2) for a in x])
+plt.plot(x, cord[:,0], label = 'cos')
+# print(np.shape(cord[:,0]))
 
 plt.legend()
+plt.show()
