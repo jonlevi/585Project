@@ -90,7 +90,7 @@ def speed_vs_accuracy():
     plt.subplot(121)
     plt.plot(range(1,25), mses_cos)
     popt, pcov = curve_fit(exp_func, range(1,25), mses_cos)
-    plt.plot(range(1,25), func(range(1,25), *popt),'--r')
+    plt.plot(range(1,25), exp_func(range(1,25), *popt),'--r')
     plt.xlabel('Number of Neurons in Hidden Layer')
     plt.ylabel('MSE of Function Approximation')
     plt.title('cos(x) Approximation')
@@ -99,18 +99,22 @@ def speed_vs_accuracy():
     plt.subplot(122)
     plt.plot(range(1,25), mses_sin)
     popt, pcov = curve_fit(exp_func, range(1,25), mses_sin)
-    plt.plot(range(1,25), func(range(1,25), *popt),'--r')
+    plt.plot(range(1,25), exp_func(range(1,25), *popt),'--r')
     plt.xlabel('Number of Neurons in Hidden Layer')
     plt.title('sin(x) Approximation')
     plt.savefig('tradeoff.png')
 
 
 def guass_network():
-    print("MSE 1000th: " + str(mean_squared_error(np.cos(x), v1[10,:])))
-    print("MSE 3000th: " + str(mean_squared_error(np.cos(x), v1[30,:])))
-    print("MSE 5000th: " + str(mean_squared_error(np.cos(x), v1[50,:])))
-    print("MSE 7000th: " + str(mean_squared_error(np.cos(x), v1[70,:])))
 
+    N = Network(11, 2, .005, [np.cos, np.sin], True)
+    stim = [random.uniform(-2*np.pi, 2*np.pi) for i in range(10000)]
+    sorted_stim = sorted(stim)
+    x = sorted_stim[::100]
+    results = N.train(stim)
+    v1 = np.array(results[0])
+    # print(v1)
+    v2 = np.array(results[1])
     plt.figure(figsize=(20,10))
     plt.subplot(121)
     plt.plot(x, np.cos(x), 'k', label='Target Function')
@@ -142,8 +146,6 @@ def delta_network():
     v1 = np.array(results[0])
     # print(v1)
     v2 = np.array(results[1])
-
-    print(np.shape(cord[:,0]))
 
     plt.figure(figsize=(30,10))
     plt.subplot(221)
