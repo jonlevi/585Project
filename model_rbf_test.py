@@ -78,9 +78,10 @@ test_set = np.array([imgs[i].flatten() for i in range(train_size, len(imgs))])
 standard_view = train_set[0]
 
 #n = RBFNetwork(img_size*img_size, 15, 4, 5, [hx, hy, hw, hh])
-n = RBFNetwork(img_size*img_size, train_size, len(standard_view), 10, [(lambda i: standard_view[i]) for x in range(len(standard_view))])
-n.centers = train_set
-v = n.train(train_set)
+n_centers = 10
+n = RBFNetwork(img_size*img_size, n_centers, len(standard_view), 1, [(lambda i: standard_view[i]) for x in range(len(standard_view))])
+n.centers = train_set[:n_centers]
+v = n.train(train_set, n_iter=1)
 
 predicted_imgs = []
 input_imgs = []
