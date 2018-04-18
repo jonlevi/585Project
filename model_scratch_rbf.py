@@ -31,14 +31,15 @@ class RBFNetwork:
         diff = target - v.sum(axis=1)
         self.w += self.learning_rate * np.dot(np.atleast_2d(diff).T, np.array([[self.f(s, i) for i in range(self.n_hidden)]]))
 
-    def train(self, stim):
-        v = np.empty((len(stim), self.n_out))
-        for i, s in enumerate(stim):
-            if np.any(np.isnan(self.centers)):
-                self.add_center(s)
-            else:
-                self.update_weights(s)
-                v[i, :] = self.v(s).sum(axis=1)
+    def train(self, stim, n_iter=1):
+        v = np.empty((len(stim)*n_iter, self.n_out))
+        for n in range(n_iter):
+            for i, s in enumerate(stim):
+                if np.any(np.isnan(self.centers)):
+                    self.add_center(s)
+                else:
+                    self.update_weights(s)
+                    v[i, :] = self.v(s).sum(axis=1)
         return v
 
     def __init__(self, n_in, n_hidden, n_out, lr, h_funcs):
@@ -48,7 +49,7 @@ class RBFNetwork:
         self.learning_rate = lr
         self.h = h_funcs
         self.w = np.random.rand(n_hidden * n_out).reshape((n_out, n_hidden))
-        self.betas = [0.5] * n_hidden
+        self.betas = [.5] * n_hidden
         self.centers = np.empty((n_hidden, n_in))
         self.centers.fill(np.nan)
         self.f = self.gauss
