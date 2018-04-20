@@ -6,7 +6,6 @@ from sklearn.metrics import mean_squared_error
 from scipy.optimize import curve_fit
 from scipy.spatial.distance import euclidean
 
-
 class RBFNetwork:
 
     def gauss(self, s, node):
@@ -42,14 +41,17 @@ class RBFNetwork:
                     v[i, :] = self.v(s).sum(axis=1)
         return v
 
-    def __init__(self, n_in, n_hidden, n_out, lr, h_funcs):
+    def activate(self, input):
+        return self.v(input).sum(axis=1)
+
+    def __init__(self, n_in, n_hidden, n_out, lr, h_funcs, beta):
         self.n_in = n_in
         self.n_hidden = n_hidden
         self.n_out = n_out
         self.learning_rate = lr
         self.h = h_funcs
         self.w = np.random.rand(n_hidden * n_out).reshape((n_out, n_hidden))
-        self.betas = [.5] * n_hidden
+        self.betas = [beta] * n_hidden
         self.centers = np.empty((n_hidden, n_in))
         self.centers.fill(np.nan)
         self.f = self.gauss
