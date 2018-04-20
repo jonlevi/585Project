@@ -104,4 +104,5 @@ for i in range(5):
 
     plt.gcf().set_size_inches(10, 10)
     plt.tight_layout()
-    plt.show()
+
+plt.show()
