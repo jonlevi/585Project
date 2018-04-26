@@ -50,7 +50,7 @@ def test_wrapper(NUMBER_TO_TRAIN, n_centers, train_size):
   imgs = all_images[NUMBER_TO_TRAIN]
   train_set = imgs[:train_size]
   test_set = imgs[train_size:]
-  v = n.train(imgs, n_iter=n_training_iter)
+  v = n.train(train_set, n_iter=n_training_iter)
 
   # Test on all images that were not used for training
   predicted_imgs = [None for i in range(10)]
