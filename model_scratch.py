@@ -5,11 +5,11 @@ from cordic import cossin_cordic
 from sklearn.metrics import mean_squared_error
 from scipy.optimize import curve_fit
 
-
 class Network:
 
     def gauss(self, s, node):
         return np.exp(-self.betas[node]*(s-self.centers[node])**2)
+
     def rect(self, s, node):
         center = self.centers[node]
         if abs(center-s) < 1.5:
@@ -28,6 +28,7 @@ class Network:
                 np.array([[self.f(s, i) for i in range(self.n_in)]]))
         # self.betas += self.learning_rate * 0.0001 * np.dot(np.atleast_2d(diff).T, np.array([[self.f(s, i) for i in range(self.n_in)]])).mean(axis=0)
         # self.centers += self.learning_rate * np.dot(np.atleast_2d(diff).T, np.array([[self.f(s, i) for i in range(self.n_in)]])).mean(axis=0)
+    
     def train(self, stim):
         sorted_stim = sorted(stim)
         x = sorted_stim[::100]
@@ -46,8 +47,6 @@ class Network:
 
     def __init__(self, n_in, n_out, lr, h_funcs, gaussian = True):
 
-
-
         self.n_in = n_in
         self.n_out = n_out
         self.learning_rate = lr
@@ -60,14 +59,10 @@ class Network:
         if (gaussian):
             self.f = self.gauss
         else:
-    
-
-
             self.f = self.rect
 
 def exp_func(x, a, b, c):
     return a*np.exp(-b*x) + c
-
 
 def speed_vs_accuracy():
     mses_cos = []
@@ -85,7 +80,7 @@ def speed_vs_accuracy():
         mses_cos.append(mean_squared_error(np.cos(x), v1[70,:]))
         mses_sin.append(mean_squared_error(np.sin(x), v2[70,:]))
 
-    plt.figure(figsize=(20,10))
+    plt.figure(figsize=(8,4))
     plt.title('Speed Accuracy Tradeoff in Size of Network')
     plt.subplot(121)
     plt.plot(range(1,25), mses_cos)
@@ -94,7 +89,7 @@ def speed_vs_accuracy():
     plt.xlabel('Number of Neurons in Hidden Layer')
     plt.ylabel('MSE of Function Approximation')
     plt.title('cos(x) Approximation')
-    
+    plt.ylim([0, 0.6])
 
     plt.subplot(122)
     plt.plot(range(1,25), mses_sin)
@@ -102,8 +97,8 @@ def speed_vs_accuracy():
     plt.plot(range(1,25), exp_func(range(1,25), *popt),'--r')
     plt.xlabel('Number of Neurons in Hidden Layer')
     plt.title('sin(x) Approximation')
-    plt.savefig('tradeoff.png')
-
+    plt.ylim([0, 0.6])
+    plt.savefig('tradeoff.pdf')
 
 def guass_network():
 
@@ -115,27 +110,27 @@ def guass_network():
     v1 = np.array(results[0])
     # print(v1)
     v2 = np.array(results[1])
-    plt.figure(figsize=(20,10))
+
+    plt.figure(figsize=(11,4))
     plt.subplot(121)
-    plt.plot(x, np.cos(x), 'k', label='Target Function')
+    plt.plot(x, np.cos(x), 'k', label='Target')
     plt.plot(x, v1[10,:], '--', lw=0.75, label='1000th')
     plt.plot(x, v1[30,:], '--', lw=0.75, label='3000th')
     plt.plot(x, v1[50,:], '--', lw=0.75, label='5000th')
     plt.plot(x, v1[70,:], '--', lw=0.75, label='7000th')
-    plt.title('Approximating cos(x)')
-    plt.legend()
+    # plt.title('Approximating cos(x)')
+    plt.ylim([-1.2, 1.2])
+    plt.legend(ncol=5, bbox_to_anchor=[1.87,1.15,0,0])
 
     plt.subplot(122)
-    plt.plot(x, np.sin(x), 'k', label='Target Function')
+    plt.plot(x, np.sin(x), 'k', label='Target')
     plt.plot(x, v2[10,:], '--', lw=0.75, label='1000th')
     plt.plot(x, v2[30,:], '--', lw=0.75, label='3000th')
     plt.plot(x, v2[50,:], '--', lw=0.75, label='5000th')
     plt.plot(x, v2[70,:], '--', lw=0.75, label='7000th')
-    plt.title('Approximating sin(x)')
-    plt.legend()
-    plt.savefig('gaussian.png')
-
-
+    # plt.title('Approximating sin(x)')
+    plt.ylim([-1.2, 1.2])
+    plt.savefig('gaussian.pdf')
 
 def delta_network():
     N = Network(11, 2, .005, [np.cos, np.sin], False)
@@ -147,35 +142,34 @@ def delta_network():
     # print(v1)
     v2 = np.array(results[1])
 
-    plt.figure(figsize=(30,10))
-    plt.subplot(221)
-    plt.plot(x, np.cos(x), 'k', label='Target Function')
+    plt.figure(figsize=(11,4))
+    plt.subplot(121)
+    plt.plot(x, np.cos(x), 'k', label='Target')
     plt.plot(x, v1[10,:], '--', lw=0.75, label='1000th')
     plt.plot(x, v1[30,:], '--', lw=0.75, label='3000th')
     plt.plot(x, v1[50,:], '--', lw=0.75, label='5000th')
     plt.plot(x, v1[70,:], '--', lw=0.75, label='7000th')
-    plt.title('Approximating cos(x) with Delta Function Filter')
-    plt.legend()
+    # plt.title('Approximating cos(x) with Delta Function Filter')
+    plt.legend(ncol=5, bbox_to_anchor=[1.87,1.15,0,0])
 
-    plt.subplot(222)
-    plt.plot(x, np.sin(x), 'k', label='Target Function')
+    plt.subplot(122)
+    plt.plot(x, np.sin(x), 'k', label='Target')
     plt.plot(x, v2[10,:], '--', lw=0.75, label='1000th')
     plt.plot(x, v2[30,:], '--', lw=0.75, label='3000th')
     plt.plot(x, v2[50,:], '--', lw=0.75, label='5000th')
     plt.plot(x, v2[70,:], '--', lw=0.75, label='7000th')
-    plt.title('Approximating sin(x)with Delta Function Filter')
-    plt.legend()
+    # plt.title('Approximating sin(x)with Delta Function Filter')
 
-    plt.subplot(223)
-    cord = np.array([cossin_cordic(a,3) for a in x])
-    plt.plot(x, cord[:,0], label = 'cos')
-    plt.title('cos(x) via 3 Iterations on CORDIC Approximation')
-    plt.subplot(224)
-    plt.title('sin(x) via 3 Iterations on CORDIC Approximation')
-    plt.plot(x, cord[:,1], label = 'sin')
+    # plt.subplot(223)
+    # cord = np.array([cossin_cordic(a,3) for a in x])
+    # plt.plot(x, cord[:,0], label = 'cos')
+    # # plt.title('cos(x) via 3 Iterations on CORDIC Approximation')
 
+    # plt.subplot(224)
+    # # plt.title('sin(x) via 3 Iterations on CORDIC Approximation')
+    # plt.plot(x, cord[:,1], label = 'sin')
 
-    plt.savefig('delta.png')
+    plt.savefig('delta.pdf')
 
 def main():
     #training network with 11 nodes to approximate sin and cos functions
@@ -187,6 +181,5 @@ def main():
 
     #train with 11 nodes using Delta Function Tuning Curves
     delta_network()
-
 
 if __name__ == "__main__": main()
